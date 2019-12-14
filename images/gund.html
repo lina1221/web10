@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>js文字向左无缝滚动</title>
+<link rel="stylesheet" href="gund.css">
+</head>
+<body>
+
+<style type="text/css">
+.qimo8{ overflow:hidden; width:1200px;}/*外层div,设置公告可见范围*/
+.qimo8 .qimo {/*width:9999999999px;*/width:11000%; height:30px;}/*公告内容,给内容预留足够的空间宽度*/ 
+.qimo8 .qimo div{ float:left;}/*包括demo1和demo2 让两个层合并为一排，也是无缝对接的关键*/ 
+.qimo8 .qimo ul{float:left; height:30px; overflow:hidden; zoom:}
+.qimo8 .qimo ul li{float:left; line-height:30px; list-style:none;} 
+.qimo8 li a{margin-left:800px;color:#444;text-decoration: none;} 
+</style> 
+
+<div id="demo" class="qimo8"> 
+　　<div class="qimo"> 
+　　　　<div id="demo1"> 
+　　　　　　<ul> 
+　　　　　　　　<li><a href='#' style="color: red;font-size: 10px;">温馨提示：最近有不少不法分子在网上骗人，请大家注意！！！</a></li>  
+　　　　　　</ul> 
+　　　　</div> 
+　　　　<div id="demo2"></div> 
+　　</div> 
+</div> 
+
+<script type="text/javascript"> 
+var demo = document.getElementById("demo");//外层可视模块 
+var demo1 = document.getElementById("demo1"); //内层滚动内容模块1
+var demo2 = document.getElementById("demo2");//内层滚动内容模块2 无缝对接到1后面的内容
+demo2.innerHTML=document.getElementById("demo1").innerHTML; //把demo1的内容复制一份到demo2中
+//关键人物上场
+
+function Marquee(){ 
+　　/*创建一个滚动函数 
+     1)demo.scrollLeft 是获取可视区 demo 位于对象左边这界和窗口中目前可见内容的最左端之间的距离，一般从0开始
+　　  2)demo2.offsetWidth  是获取 demo2 相对于版面或由父坐标 offsetParent 属性指定的父坐标的宽度，一般是固定的，就是当前滚动内容的总宽度；
+　　　3)demo.scrollLeft和demo2.offsetWidth相减后值是等于0或不小于0时说明 demo1的内容已经完全滚动到可视范围之外；
+       那么，就让 demo.scrollLeft 的值重新等于0,（这里用的是demo.scrollLeft减于demo2.offsetWidth的结果，不出问题都应该是0）,
+　　　  视觉上相当于demo1替换了当前demo2相同位置，其实两个模块并没有替换，只是重复了初始化时的状态，重新开始从demo1开始     
+     4)demo.scrollLeft和demo2.offsetWidth相减后值小于0 就让 demo.scrollLeft 的数值一直增加，向左移动
+   */
+　　if(demo.scrollLeft-demo2.offsetWidth>=0){ 
+　　　　demo.scrollLeft-=demo1.offsetWidth; 
+       //在这里把值打印出来
+       //console.log("demo的scrollLeft值减去: "+demo.scrollLeft+"－demo1的offsetWidth值 : "+demo1.offsetWidth+"等于"+(demo.scrollLeft-=demo1.offsetWidth)); 
+　　}else{ 
+　　　　//console.log("demo的scrollLeft值为: "+demo.scrollLeft+"减去demo2.offsetWidth :"+demo2.offsetWidth+"等于==="+ (demo.scrollLeft-demo2.offsetWidth)); 
+　　　　demo.scrollLeft++; 
+　　} 
+}
+
+//下面这段 就要讲到js的异步周期函数了，不知道我这样称呼它算不算准确，setInterval 也可以写成 window.setInterval
+/*
+特别说明:凡是属于window对象的方法都可以直接使用，无需使用window对象调用。
+如果不关闭游览器或者调用 clearInterval()将会永远的执行下去。
+返回值是当前定时器的唯一ID标识。
+有疑问的推荐看下面两篇文章，里面讲解的非常全面仔细
+http://www.softwhy.com/forum.php?mod=viewthread&tid=3972 
+http://www.softwhy.com/forum.php?mod=viewthread&tid=6940
+*/
+
+//先把函数保存在一个变量中，
+var myvar=setInterval(Marquee,20); 
+</script> 
+</body> 
+</html>

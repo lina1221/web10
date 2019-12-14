@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="animate.js"></script>
+	<style type="text/css">
+        .aaa{ overflow:hidden; width:1200px;height: 20px;background: #cccccc}/*外层div,设置公告可见范围*/
+        .aaa .bbb {/*width:9999999999px;*/width:10000%; height:40px;margin-top: 0px;}/*公告内容,给内容预留足够的空间宽度*/ 
+        .aaa .bbb div{ float:left;} 
+        .aaa .bbb ul{float:left; height:30px; overflow:hidden; zoom:}
+        .aaa .bbb ul li{margin-top: 0px;float:left; line-height:20px; list-style:none;} 
+        .aaa li a{margin-left:1200px;color:#444;text-decoration: none;} 
+</style> 
+</head>
+<body>
+	<div class="box" id="box">
+		<div id="demo" class="aaa"> 
+			<img src="images/a15.png" alt="" style="height: 20px;float: left;position: absolute;">
+			<div class="bbb"> 
+				<div id="demo1" style="margin-top: 0px;"> 
+					<ul> 
+						<li><a href='#' style="color: red;font-size: 10px;">[温馨提示]：最近有不少不法分子在网上骗人，请大家注意！！！</a>
+						</li>  
+					</ul> 
+				</div> 
+				<div id="demo2"></div> 
+			</div> 
+		</div>
+		<div class="slider" id="slider">
+			<div class="slide"><img src="images/b5.png" alt=""></div>
+			<div class="slide"><img src="images/b1.png" alt=""></div>
+			<div class="slide"><img src="images/b2.png" alt=""></div>
+			<div class="slide"><img src="images/b3.png" alt=""></div>
+			<div class="slide"><img src="images/b4.png" alt=""></div>
+			<div class="slide"><img src="images/b5.png" alt=""></div>
+			<div class="slide"><img src="images/b1.png" alt=""></div>
+		</div>
+		<span id="left"><</span>
+		<span id="right">></span>
+		<ul class="nav" id="nav">
+			<li class="active"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<script>
+		//滚动条
+		var demo = document.getElementById("demo");//外层可视模块 
+		var demo1 = document.getElementById("demo1"); //内层滚动内容模块1
+		var demo2 = document.getElementById("demo2");//内层滚动内容模块2 无缝对接到1后面的内容
+		demo2.innerHTML=document.getElementById("demo1").innerHTML;
+
+		function Marquee(){
+　　　　	if(demo.scrollLeft-demo2.offsetWidth>=0){ 
+　　　　		demo.scrollLeft-=demo1.offsetWidth;
+				//console.log("demo的scrollLeft值减去: "+demo.scrollLeft+"－demo1的offsetWidth值 : "+demo1.offsetWidth+"等于"+(demo.scrollLeft-=demo1.offsetWidth)); 
+　　　　    }
+			else{ 
+				//console.log("demo的scrollLeft值为:"+demo.scrollLeft+"减去demo2.offsetWidth :"+demo2.offsetWidth+"等于==="+ (demo.scrollLeft-demo2.offsetWidth)); 
+　　　　		demo.scrollLeft++; 
+			} 
+		}
+		var myvar=setInterval(Marquee,20);
+		//轮播图
+		var box = document.getElementById("box");
+		var oNavlist = document.getElementById("nav").children;
+		var slider = document.getElementById("slider");
+		var left = document.getElementById("left");
+		var right = document.getElementById("right");
+		var index = 1;
+		var timer;
+		var isMoving = false;
+		//轮播下一张函数
+		function next(){
+        	if(!isMoving){
+        		isMoving = true;
+        	    index++;
+        	    navChange();
+        	    animate(slider,{left:-1200*index},function(){
+        		   if(index === 6){
+        			  slider.style.left = "-1200px";
+        			  index = 1;
+        		}
+        		isMoving = false;
+        	});
+        }
+    }
+		 function prev(){
+        	if(!isMoving){
+        		isMoving = true;
+        	    index--;
+        	    navChange();
+        	    animate(slider,{left:-1200*index},function(){
+        		   if(index === 0){
+        			  slider.style.left = "-6000px";
+        			  index = 5;
+        			}
+        		isMoving = false;
+        	});
+        	}
+    }
+
+		var timer = setInterval(next,2000);
+		//鼠标划入清定时器
+		box.onmouseover = function(){
+			animate(left,{opacity:50})
+			animate(right,{opacity:50})
+			clearInterval(timer);
+		}
+		//鼠标划出开定时器
+		box.onmouseout = function(){
+			animate(left,{opacity:0})
+			animate(right,{opacity:0})
+			timer = setInterval(next,2000);
+		}
+		right.onclick = next;
+		left.onclick = prev;
+		//小按钮点击事件
+		for(var i = 0;i < oNavlist.length;i++){
+      		oNavlist[i].idx = i;
+      		oNavlist[i].onclick = function(){
+      			index = this.idx + 1;
+      			navChange();
+      			animate(slider,{left:-1200*index});
+      		}
+      	}
+
+		//小按钮背景切换
+		function navChange(){
+      		for(var i = 0;i<oNavlist.length;i++){
+      			oNavlist[i].className = '';
+      		}
+      		if(index===6){
+      			oNavlist[0].className = 'active';
+      		}else if(index===0){
+                oNavlist[4].className = 'active';
+      		}else{
+                oNavlist[index-1].className = 'active';
+      		}
+      		
+      	}
+
+
+
+	</script>
+</body>
+</html>
